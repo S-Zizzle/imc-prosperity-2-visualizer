@@ -4,10 +4,13 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useStore } from '../../store.ts';
 import { formatNumber } from '../../utils/format.ts';
 import { AlgorithmSummaryCard } from './AlgorithmSummaryCard.tsx';
+import { ConversionPriceChart } from './ConversionPriceChart.tsx';
+import { EnvironmentChart } from './EnvironmentChart.tsx';
 import { PositionChart } from './PositionChart.tsx';
-import { PriceChart } from './PriceChart.tsx';
+import { ProductPriceChart } from './ProductPriceChart.tsx';
 import { ProfitLossChart } from './ProfitLossChart.tsx';
 import { TimestampsCard } from './TimestampsCard.tsx';
+import { TransportChart } from './TransportChart.tsx';
 import { VisualizerCard } from './VisualizerCard.tsx';
 import { VolumeChart } from './VolumeChart.tsx';
 import { FVChart } from './FVChart.tsx';
@@ -21,6 +24,13 @@ export function VisualizerPage(): ReactNode {
     return <Navigate to={`/${search}`} />;
   }
 
+  const conversionProducts = new Set();
+  for (const row of algorithm.data) {
+    for (const product of Object.keys(row.state.observations.conversionObservations)) {
+      conversionProducts.add(product);
+    }
+  }
+
   let profitLoss = 0;
   const lastTimestamp = algorithm.activityLogs[algorithm.activityLogs.length - 1].timestamp;
   for (let i = algorithm.activityLogs.length - 1; i >= 0 && algorithm.activityLogs[i].timestamp == lastTimestamp; i--) {
@@ -30,24 +40,50 @@ export function VisualizerPage(): ReactNode {
   const symbolColumns: ReactNode[] = [];
   Object.keys(algorithm.data[0].state.listings)
     .sort((a, b) => a.localeCompare(b))
-    .forEach((symbol, i) => {
+    .forEach(symbol => {
       symbolColumns.push(
-        <Grid.Col key={i * 2} span={{ xs: 12, sm: 6 }}>
-          <PriceChart symbol={symbol} />
+        <Grid.Col key={`${symbol} - product price`} span={{ xs: 12, sm: 6 }}>
+          <ProductPriceChart symbol={symbol} />
         </Grid.Col>,
       );
 
       symbolColumns.push(
-        <Grid.Col key={i * 2 + 1} span={{ xs: 12, sm: 6 }}>
+        <Grid.Col key={`${symbol} - symbol`} span={{ xs: 12, sm: 6 }}>
           <VolumeChart symbol={symbol} />
         </Grid.Col>,
       );
 
+<<<<<<< HEAD
       symbolColumns.push(
         <Grid.Col key={i * 2 + 2} span={{ xs: 12, sm: 6 }}>
           <FVChart symbol={symbol} />
         </Grid.Col>,
       );
+=======
+      if (!conversionProducts.has(symbol)) {
+        return;
+      }
+
+      symbolColumns.push(
+        <Grid.Col key={`${symbol} - conversion price`} span={{ xs: 12, sm: 6 }}>
+          <ConversionPriceChart symbol={symbol} />
+        </Grid.Col>,
+      );
+
+      symbolColumns.push(
+        <Grid.Col key={`${symbol} - transport`} span={{ xs: 12, sm: 6 }}>
+          <TransportChart symbol={symbol} />
+        </Grid.Col>,
+      );
+
+      symbolColumns.push(
+        <Grid.Col key={`${symbol} - environment`} span={{ xs: 12, sm: 6 }}>
+          <EnvironmentChart symbol={symbol} />
+        </Grid.Col>,
+      );
+
+      symbolColumns.push(<Grid.Col key={`${symbol} - environment`} span={{ xs: 12, sm: 6 }} />);
+>>>>>>> 4bf5c201e235346345af6840b0ebd4a90014470e
     });
 
   return (
