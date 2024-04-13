@@ -24,6 +24,12 @@ export type Position = number;
 export type UserId = string;
 export type ObservationValue = number;
 
+export interface FVLogRow {
+  timestamp: number;
+  product: Product;
+  value: number;
+}
+
 export interface ActivityLogRow {
   day: number;
   timestamp: number;
@@ -101,6 +107,7 @@ export interface Algorithm {
   summary?: AlgorithmSummary;
   activityLogs: ActivityLogRow[];
   data: AlgorithmDataRow[];
+  fvLogs: FVLogRow[]
 }
 
 export type CompressedListing = [symbol: ProsperitySymbol, product: Product, denomination: Product];

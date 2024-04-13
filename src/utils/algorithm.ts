@@ -1,5 +1,6 @@
 import {
   ActivityLogRow,
+  FVLogRow,
   Algorithm,
   AlgorithmDataRow,
   AlgorithmSummary,
@@ -33,6 +34,46 @@ function getColumnValues(columns: string[], indices: number[]): number[] {
   }
 
   return values;
+}
+
+function getFVLogs(logLines: string[]): FVLogRow[] {
+  //console.log(logLines);
+  const headerIndex = logLines.indexOf('Sandbox logs:');
+  if (headerIndex === -1) {
+    return [];
+  }
+
+  const rows: FVLogRow[] = [];
+
+  for (let i = headerIndex; i < logLines.length; i++) {
+    const line = logLines[i];
+    //console.log(line);
+    if (!line.includes('lambdaLog')) {
+      continue;
+    }
+
+    const searchStr = 'FV:';
+    const indexes = [...line.matchAll(new RegExp(searchStr, 'gi'))].map(a => a.index);
+    console.log(indexes);
+    
+    indexes.forEach((index) => {
+      const product = line.substring(index+4, line.indexOf("_", index));
+      const fv = Number(line.substring(line.indexOf("_", index)+1, line.indexOf("\\", line.indexOf("_", index)+1)));
+      const timestampLine = logLines[i+1]
+      const timestamp = Number(timestampLine.trim().split('"timestamp": ').pop());
+      console.log(product + " ; " + fv + " ; " + timestamp);
+
+      rows.push({
+        timestamp: timestamp,
+        product: product,
+        value: fv,
+      });
+    })
+
+    //console.log(`product: ${product}, fv: ${fv}, timestamp: ${timestamp},`);
+  }
+
+  return rows;
 }
 
 function getActivityLogs(logLines: string[]): ActivityLogRow[] {
@@ -217,7 +258,7 @@ function getAlgorithmData(logLines: string[]): AlgorithmDataRow[] {
       const compressedDataRow = JSON.parse(JSON.parse('"' + line.substring(start, end) + '"'));
       rows.push(decompressDataRow(compressedDataRow, nextSandboxLogs));
     } catch (err) {
-      console.log(line);
+      //console.log(line);
       console.error(err);
       throw new Error('Sandbox logs are in invalid format, please see the prerequisites section above.');
     }
@@ -227,10 +268,15 @@ function getAlgorithmData(logLines: string[]): AlgorithmDataRow[] {
 }
 
 export function parseAlgorithmLogs(logs: string, summary?: AlgorithmSummary): Algorithm {
+  
+  
   const logLines = logs.trim().split(/\r?\n/);
+
+  //console.log(logLines);
 
   const activityLogs = getActivityLogs(logLines);
   const data = getAlgorithmData(logLines);
+  const fvLogs = getFVLogs(logLines);
 
   if (activityLogs.length === 0 || data.length === 0) {
     throw new Error('Logs are in invalid format, please see the prerequisites section above.');
@@ -240,6 +286,7 @@ export function parseAlgorithmLogs(logs: string, summary?: AlgorithmSummary): Al
     summary,
     activityLogs,
     data,
+    fvLogs,
   };
 }
 

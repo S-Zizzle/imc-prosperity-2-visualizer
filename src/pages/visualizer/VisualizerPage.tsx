@@ -10,6 +10,7 @@ import { ProfitLossChart } from './ProfitLossChart.tsx';
 import { TimestampsCard } from './TimestampsCard.tsx';
 import { VisualizerCard } from './VisualizerCard.tsx';
 import { VolumeChart } from './VolumeChart.tsx';
+import { FVChart } from './FVChart.tsx';
 
 export function VisualizerPage(): ReactNode {
   const algorithm = useStore(state => state.algorithm);
@@ -39,6 +40,12 @@ export function VisualizerPage(): ReactNode {
       symbolColumns.push(
         <Grid.Col key={i * 2 + 1} span={{ xs: 12, sm: 6 }}>
           <VolumeChart symbol={symbol} />
+        </Grid.Col>,
+      );
+
+      symbolColumns.push(
+        <Grid.Col key={i * 2 + 2} span={{ xs: 12, sm: 6 }}>
+          <FVChart symbol={symbol} />
         </Grid.Col>,
       );
     });
