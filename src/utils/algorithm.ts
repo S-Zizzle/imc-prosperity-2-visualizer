@@ -1,6 +1,7 @@
 import {
   ActivityLogRow,
   FVLogRow,
+  OrchidProductionRow,
   Algorithm,
   AlgorithmDataRow,
   AlgorithmSummary,
@@ -36,6 +37,43 @@ function getColumnValues(columns: string[], indices: number[]): number[] {
   return values;
 }
 
+function getOrchidProduction(logLines: string[]): OrchidProductionRow[] {
+  //console.log(logLines);
+  const headerIndex = logLines.indexOf('Sandbox logs:');
+  if (headerIndex === -1) {
+    return [];
+  }
+
+  const rows: OrchidProductionRow[] = [];
+
+  for (let i = headerIndex; i < logLines.length; i++) {
+    const line = logLines[i];
+    //console.log(line);
+    if (!line.includes('lambdaLog')) {
+      continue;
+    }
+
+    const index = line.indexOf('PRODUCTION:')
+    if (headerIndex === -1) {
+      return [];
+    }
+
+    const production = Number(line.substring(index+11, line.indexOf("\\", index)));
+    const timestampLine = logLines[i+1]
+    const timestamp = Number(timestampLine.trim().split('"timestamp": ').pop());
+    console.log(production + " ; " + timestamp);
+
+    rows.push({
+      timestamp: timestamp,
+      value: production,
+    });
+
+    //console.log(`product: ${product}, fv: ${fv}, timestamp: ${timestamp},`);
+  }
+
+  return rows;
+}
+
 function getFVLogs(logLines: string[]): FVLogRow[] {
   //console.log(logLines);
   const headerIndex = logLines.indexOf('Sandbox logs:');
@@ -54,14 +92,14 @@ function getFVLogs(logLines: string[]): FVLogRow[] {
 
     const searchStr = 'FV:';
     const indexes = [...line.matchAll(new RegExp(searchStr, 'gi'))].map(a => a.index);
-    console.log(indexes);
+    //console.log(indexes);
     
     indexes.forEach((index) => {
       const product = line.substring(index+4, line.indexOf("_", index));
       const fv = Number(line.substring(line.indexOf("_", index)+1, line.indexOf("\\", line.indexOf("_", index)+1)));
       const timestampLine = logLines[i+1]
       const timestamp = Number(timestampLine.trim().split('"timestamp": ').pop());
-      console.log(product + " ; " + fv + " ; " + timestamp);
+      //console.log(product + " ; " + fv + " ; " + timestamp);
 
       rows.push({
         timestamp: timestamp,
@@ -277,6 +315,7 @@ export function parseAlgorithmLogs(logs: string, summary?: AlgorithmSummary): Al
   const activityLogs = getActivityLogs(logLines);
   const data = getAlgorithmData(logLines);
   const fvLogs = getFVLogs(logLines);
+  const orchidProductionLogs = getOrchidProduction(logLines);
 
   if (activityLogs.length === 0 || data.length === 0) {
     throw new Error('Logs are in invalid format, please see the prerequisites section above.');
@@ -287,6 +326,7 @@ export function parseAlgorithmLogs(logs: string, summary?: AlgorithmSummary): Al
     activityLogs,
     data,
     fvLogs,
+    orchidProductionLogs,
   };
 }
 

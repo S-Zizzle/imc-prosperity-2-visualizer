@@ -14,6 +14,7 @@ import { TransportChart } from './TransportChart.tsx';
 import { VisualizerCard } from './VisualizerCard.tsx';
 import { VolumeChart } from './VolumeChart.tsx';
 import { FVChart } from './FVChart.tsx';
+import { OrchidProductionChart } from './OrchidProductionChart.tsx';
 
 export function VisualizerPage(): ReactNode {
   const algorithm = useStore(state => state.algorithm);
@@ -59,6 +60,14 @@ export function VisualizerPage(): ReactNode {
         </Grid.Col>,
       );
 
+      if (symbol == "ORCHIDS") {
+        symbolColumns.push(
+          <Grid.Col key={`${symbol} - Production`} span={{ xs: 12, sm: 6 }}>
+            <OrchidProductionChart/>
+          </Grid.Col>,
+        );
+      }
+
       if (!conversionProducts.has(symbol)) {
         return;
       }
@@ -80,9 +89,8 @@ export function VisualizerPage(): ReactNode {
           <EnvironmentChart symbol={symbol} />
         </Grid.Col>,
       );
-
-      symbolColumns.push(<Grid.Col key={`${symbol} - environment`} span={{ xs: 12, sm: 6 }} />);
     });
+
 
   return (
     <Container fluid>

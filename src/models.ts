@@ -30,6 +30,11 @@ export interface FVLogRow {
   value: number;
 }
 
+export interface OrchidProductionRow {
+  timestamp: number;
+  value: number;
+}
+
 export interface ActivityLogRow {
   day: number;
   timestamp: number;
@@ -107,7 +112,8 @@ export interface Algorithm {
   summary?: AlgorithmSummary;
   activityLogs: ActivityLogRow[];
   data: AlgorithmDataRow[];
-  fvLogs: FVLogRow[]
+  fvLogs: FVLogRow[];
+  orchidProductionLogs: OrchidProductionRow[];
 }
 
 export type CompressedListing = [symbol: ProsperitySymbol, product: Product, denomination: Product];
