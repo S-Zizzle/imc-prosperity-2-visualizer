@@ -53,13 +53,12 @@ export function VisualizerPage(): ReactNode {
         </Grid.Col>,
       );
 
-<<<<<<< HEAD
       symbolColumns.push(
-        <Grid.Col key={i * 2 + 2} span={{ xs: 12, sm: 6 }}>
+        <Grid.Col key={`${symbol} - Fair Value`} span={{ xs: 12, sm: 6 }}>
           <FVChart symbol={symbol} />
         </Grid.Col>,
       );
-=======
+
       if (!conversionProducts.has(symbol)) {
         return;
       }
@@ -83,7 +82,6 @@ export function VisualizerPage(): ReactNode {
       );
 
       symbolColumns.push(<Grid.Col key={`${symbol} - environment`} span={{ xs: 12, sm: 6 }} />);
->>>>>>> 4bf5c201e235346345af6840b0ebd4a90014470e
     });
 
   return (
