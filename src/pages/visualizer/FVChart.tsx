@@ -37,8 +37,6 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
       data: [...dataByTimestamp.keys()].map(timestamp => [timestamp, dataByTimestamp.get(timestamp)]),
     },
   ];
-
-
     const data = [];
 
     for (const row of productData) {
@@ -50,7 +48,45 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
       name: symbol,
       data,
       dashStyle: 'Dash',
+      yAxis: 0
     });
 
-  return <Chart title={`${symbol} - Fair Value`} series={series} />;
+
+
+
+      if (symbol == "ORCHIDS"){
+        const dataByTimestampOrchids = new Map<number, number>();
+        for (const row of algorithm.orchidProductionLogs) {
+          if (!dataByTimestampOrchids.has(row.timestamp)) {
+            dataByTimestampOrchids.set(row.timestamp, row.value);
+          } else {
+            dataByTimestampOrchids.set(row.timestamp, 0);
+          }
+        }
+    
+    
+        const dataOrchids = [];
+    
+        for (const row of algorithm.orchidProductionLogs) {
+          dataOrchids.push([row.timestamp, row.value]);
+        }
+    
+        series.push({
+          type: 'line',
+          name: 'dataOrchids',
+          data: [...dataByTimestampOrchids.keys()].map(timestamp => [timestamp, dataByTimestampOrchids.get(timestamp)]),
+          yAxis: 1
+        },);
+      }
+
+      const options: Highcharts.Options = {
+        yAxis: [{
+          opposite: false,
+          allowDecimals: true,
+        },
+      {opposite: true, allowDecimals: true, }]
+      };
+
+
+  return <Chart title={`${symbol} - Fair Value`} options={options} series={series} />;
 }
