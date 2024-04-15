@@ -21,7 +21,7 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
     }
   }
 
-  const dataByTimestamp = new Map<number, number>();
+  const dataByTimestamp = new Map<number, Number>();
   for (const row of productData) {
     if (!dataByTimestamp.has(row.timestamp)) {
       dataByTimestamp.set(row.timestamp, row.value);
@@ -33,8 +33,15 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
   const series: Highcharts.SeriesOptionsType[] = [
     {
       type: 'line',
-      name: 'Total',
+      name: 'Fair Value',
       data: [...dataByTimestamp.keys()].map(timestamp => [timestamp, dataByTimestamp.get(timestamp)]),
+      yAxis: 0,
+    },
+    {
+      type: 'line',
+      name: 'Production',
+      data: [...dataByTimestamp.keys()].map(timestamp => [timestamp, dataByTimestamp.get(timestamp)]),
+      yAxis: 1,
     },
   ];
     const data = [];
@@ -55,7 +62,7 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
 
 
       if (symbol == "ORCHIDS"){
-        const dataByTimestampOrchids = new Map<number, number>();
+        const dataByTimestampOrchids = new Map<number, Number>();
         for (const row of algorithm.orchidProductionLogs) {
           if (!dataByTimestampOrchids.has(row.timestamp)) {
             dataByTimestampOrchids.set(row.timestamp, row.value);
@@ -70,11 +77,13 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
         for (const row of algorithm.orchidProductionLogs) {
           dataOrchids.push([row.timestamp, row.value]);
         }
+
+        console.log(dataOrchids);
     
         series.push({
           type: 'line',
           name: 'dataOrchids',
-          data: [...dataByTimestampOrchids.keys()].map(timestamp => [timestamp, dataByTimestampOrchids.get(timestamp)]),
+          data: dataOrchids,//[...dataByTimestampOrchids.keys()].map(timestamp => [timestamp, dataByTimestampOrchids.get(timestamp)]),
           yAxis: 1
         },);
       }
@@ -84,7 +93,7 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
           opposite: false,
           allowDecimals: true,
         },
-      {opposite: true, allowDecimals: true, }]
+      {opposite: true, allowDecimals: true, labels: {format: '{value:.4f}'} }]
       };
 
 

@@ -27,12 +27,12 @@ export type ObservationValue = number;
 export interface FVLogRow {
   timestamp: number;
   product: Product;
-  value: number;
+  value: Number;
 }
 
 export interface OrchidProductionRow {
   timestamp: number;
-  value: number;
+  value: Number;
 }
 
 export interface ActivityLogRow {

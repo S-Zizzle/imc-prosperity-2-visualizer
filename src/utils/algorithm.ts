@@ -58,10 +58,10 @@ function getOrchidProduction(logLines: string[]): OrchidProductionRow[] {
       return [];
     }
 
-    const production = Number(line.substring(index+11, line.indexOf("\\", index)));
+    const production = Number.parseFloat(line.substring(index+11, line.indexOf("\\", index)));
     const timestampLine = logLines[i+1]
     const timestamp = Number(timestampLine.trim().split('"timestamp": ').pop());
-    console.log(production + " ; " + timestamp);
+    //console.log(production + " ; " + timestamp);
 
     rows.push({
       timestamp: timestamp,
