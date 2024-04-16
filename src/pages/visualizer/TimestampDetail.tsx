@@ -28,6 +28,14 @@ export function TimestampDetail({
 
   return (
     <Grid columns={12}>
+      <Grid.Col span={{ xs: 12, sm: 6 }}>
+        <Title order={5}>Algorithm logs</Title>
+        {algorithmLogs ? (
+          <ScrollableCodeHighlight code={algorithmLogs} language="markdown" />
+        ) : (
+          <Text>Timestamp has no algorithm logs</Text>
+        )}
+      </Grid.Col>
       <Grid.Col span={12}>
         {/* prettier-ignore */}
         <Title order={5}>
@@ -81,14 +89,7 @@ export function TimestampDetail({
           <Text>Timestamp has no sandbox logs</Text>
         )}
       </Grid.Col>
-      <Grid.Col span={{ xs: 12, sm: 6 }}>
-        <Title order={5}>Algorithm logs</Title>
-        {algorithmLogs ? (
-          <ScrollableCodeHighlight code={algorithmLogs} language="markdown" />
-        ) : (
-          <Text>Timestamp has no algorithm logs</Text>
-        )}
-      </Grid.Col>
+      
       <Grid.Col span={{ xs: 12, sm: 6 }}>
         <Title order={5}>Previous trader data</Title>
         {state.traderData ? (

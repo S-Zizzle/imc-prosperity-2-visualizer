@@ -14,7 +14,6 @@ import { TransportChart } from './TransportChart.tsx';
 import { VisualizerCard } from './VisualizerCard.tsx';
 import { VolumeChart } from './VolumeChart.tsx';
 import { FVChart } from './FVChart.tsx';
-import { OrchidProductionChart } from './OrchidProductionChart.tsx';
 
 export function VisualizerPage(): ReactNode {
   const algorithm = useStore(state => state.algorithm);
