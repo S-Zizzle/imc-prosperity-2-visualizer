@@ -89,6 +89,12 @@ export function VisualizerPage(): ReactNode {
         </Grid.Col>,
       );
     });
+  
+    symbolColumns.push(
+      <Grid.Col key={`COMP & BASKET - Fair Value`} span={{ xs: 12, sm: 6 }}>
+        <FVChart symbol='COMP+BASKET' />
+      </Grid.Col>,
+    );
 
 
   return (
