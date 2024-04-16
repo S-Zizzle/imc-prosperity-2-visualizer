@@ -92,7 +92,13 @@ export function VisualizerPage(): ReactNode {
   
     symbolColumns.push(
       <Grid.Col key={`COMP & BASKET - Fair Value`} span={{ xs: 12, sm: 6 }}>
-        <FVChart symbol='COMP+BASKET' />
+        <FVChart symbol='COMP&BASKET' />
+      </Grid.Col>,
+    );
+
+    symbolColumns.push(
+      <Grid.Col key={`BASKET - COMP - FunctionDiff`} span={{ xs: 12, sm: 6 }}>
+        <FVChart symbol='FunctionDiff' />
       </Grid.Col>,
     );
 

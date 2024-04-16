@@ -13,7 +13,7 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
   const productData: FVLogRow[] = [];
   const series: Highcharts.SeriesOptionsType[] = [];
 
-  if (symbol == "COMP+BASKET") {
+  if (symbol == "COMP&BASKET") {
     const compRow: FVLogRow[] = [];
     const basketRow: FVLogRow[] = [];
     for (const row of algorithm.fvLogs) {
@@ -116,7 +116,7 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
       },
       {
         type: 'line',
-        name: 'Production',
+        name: 'Orchid Production',
         data: [...dataByTimestamp.keys()].map(timestamp => [timestamp, dataByTimestamp.get(timestamp)]),
         yAxis: 1,
       },
