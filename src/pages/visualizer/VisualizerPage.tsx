@@ -53,6 +53,10 @@ export function VisualizerPage(): ReactNode {
         </Grid.Col>,
       );
 
+      if (symbol in ['PRODUCTION']) {
+        return;
+      }
+
       symbolColumns.push(
         <Grid.Col key={`${symbol} - Fair Value`} span={{ xs: 12, sm: 6 }}>
           <FVChart symbol={symbol} />
@@ -89,7 +93,8 @@ export function VisualizerPage(): ReactNode {
         </Grid.Col>,
       );
     });
-  
+    
+    /*
     symbolColumns.push(
       <Grid.Col key={`COMP & BASKET - Fair Value`} span={{ xs: 12, sm: 6 }}>
         <FVChart symbol='COMP&BASKET' />
@@ -101,6 +106,7 @@ export function VisualizerPage(): ReactNode {
         <FVChart symbol='FunctionDiff' />
       </Grid.Col>,
     );
+    */
 
 
   return (

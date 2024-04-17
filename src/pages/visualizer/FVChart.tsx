@@ -12,8 +12,16 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
   const algorithm = useStore(state => state.algorithm)!;
   const productData: FVLogRow[] = [];
   const series: Highcharts.SeriesOptionsType[] = [];
+  let options: Highcharts.Options = {
+    yAxis: [{
+      opposite: false,
+      allowDecimals: true,
+    },]
+  };
 
-  if (symbol == "COMP&BASKET") {
+  console.log(symbol);
+
+  if (symbol == "COMP_BASKET") {
     const compRow: FVLogRow[] = [];
     const basketRow: FVLogRow[] = [];
     for (const row of algorithm.fvLogs) {
@@ -87,10 +95,77 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
       dashStyle: 'Dash',
       yAxis: 1
     });
+
+    options = {
+      yAxis: [{
+        opposite: false,
+        allowDecimals: true,
+      },
+    {opposite: true, allowDecimals: true }]
+    };
+  }
+  else if (symbol == 'ORCHIDS'){
+    const prodRow: FVLogRow[] = [];
+    const fvRow: FVLogRow[] = [];
+    for (const row of algorithm.fvLogs) {
+      if (row.product === "PRODUCTION") {
+        prodRow.push(row)
+      }
+      else if (row.product === "ORCHIDS") {
+        fvRow.push(row)
+      }
+      else {
+        continue;
+      }
+    }
+  
+    const prodDataByTimestamp = new Map<number, Number>();
+    for (const row of prodRow) {
+      if (!prodDataByTimestamp.has(row.timestamp)) {
+        prodDataByTimestamp.set(row.timestamp, row.value);
+      } else {
+        prodDataByTimestamp.set(row.timestamp, 0);
+      }
+    }
+
+    const fvDataByTimestamp = new Map<number, Number>();
+    for (const row of fvRow) {
+      if (!fvDataByTimestamp.has(row.timestamp)) {
+        fvDataByTimestamp.set(row.timestamp, row.value);
+      } else {
+        fvDataByTimestamp.set(row.timestamp, 0);
+      }
+    }
+  
+    series.push(
+      {
+        type: 'line',
+        name: 'production',
+        data: [...prodDataByTimestamp.keys()].map(timestamp => [timestamp, prodDataByTimestamp.get(timestamp)]),
+        yAxis: 0,
+      },
+      {
+        type: 'line',
+        name: 'fv',
+        data: [...fvDataByTimestamp.keys()].map(timestamp => [timestamp, fvDataByTimestamp.get(timestamp)]),
+        yAxis: 1,
+      },
+    );
+
+    options = {
+      yAxis: [{
+        opposite: false,
+        allowDecimals: true,
+      },
+    {opposite: true, allowDecimals: true }]
+    };
   }
   else {
     for (const row of algorithm.fvLogs) {
       if (row.product !== symbol) {
+        continue;
+      }
+      else if (row.product in ['COMP_BASKET', 'ORCHIDS', 'PRODUCTION']) {
         continue;
       }
       else {
@@ -114,12 +189,6 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
         data: [...dataByTimestamp.keys()].map(timestamp => [timestamp, dataByTimestamp.get(timestamp)]),
         yAxis: 0,
       },
-      {
-        type: 'line',
-        name: 'Orchid Production',
-        data: [...dataByTimestamp.keys()].map(timestamp => [timestamp, dataByTimestamp.get(timestamp)]),
-        yAxis: 1,
-      },
     );
       const data = [];
   
@@ -134,42 +203,7 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
         dashStyle: 'Dash',
         yAxis: 0
       });
-  
-  
-  
-    if (symbol == "ORCHIDS"){
-      const dataByTimestampOrchids = new Map<number, Number>();
-      for (const row of algorithm.orchidProductionLogs) {
-        if (!dataByTimestampOrchids.has(row.timestamp)) {
-          dataByTimestampOrchids.set(row.timestamp, row.value);
-        } else {
-          dataByTimestampOrchids.set(row.timestamp, 0);
-        }
-      }
-  
-      const dataOrchids = [];
-  
-      for (const row of algorithm.orchidProductionLogs) {
-        dataOrchids.push([row.timestamp, row.value]);
-      }
-  
-      series.push({
-        type: 'line',
-        name: 'dataOrchids',
-        data: dataOrchids,//[...dataByTimestampOrchids.keys()].map(timestamp => [timestamp, dataByTimestampOrchids.get(timestamp)]),
-        yAxis: 1
-      },);
     }
-  }
-
-
-  const options: Highcharts.Options = {
-    yAxis: [{
-      opposite: false,
-      allowDecimals: true,
-    },
-  {opposite: true, allowDecimals: true }]
-  };
 
   return <Chart title={`${symbol} - Fair Value`} options={options} series={series} />;
 }
