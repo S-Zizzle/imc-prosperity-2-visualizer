@@ -63,14 +63,6 @@ export function VisualizerPage(): ReactNode {
         </Grid.Col>,
       );
 
-      //if (symbol == "ORCHIDS") {
-      //  symbolColumns.push(
-      //    <Grid.Col key={`${symbol} - Production`} span={{ xs: 12, sm: 6 }}>
-      //      <OrchidProductionChart/>
-      //    </Grid.Col>,
-      //  );
-      //}
-
       if (!conversionProducts.has(symbol)) {
         return;
       }
@@ -94,13 +86,12 @@ export function VisualizerPage(): ReactNode {
       );
     });
     
-    /*
     symbolColumns.push(
       <Grid.Col key={`COMP & BASKET - Fair Value`} span={{ xs: 12, sm: 6 }}>
-        <FVChart symbol='COMP&BASKET' />
+        <FVChart symbol='COMP_BASKET' />
       </Grid.Col>,
     );
-
+    /*
     symbolColumns.push(
       <Grid.Col key={`BASKET - COMP - FunctionDiff`} span={{ xs: 12, sm: 6 }}>
         <FVChart symbol='FunctionDiff' />

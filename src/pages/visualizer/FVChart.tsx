@@ -59,49 +59,19 @@ export function FVChart({ symbol }: FVChartProps): ReactNode {
         type: 'line',
         name: 'COMP',
         data: [...compdataByTimestamp.keys()].map(timestamp => [timestamp, compdataByTimestamp.get(timestamp)]),
-        yAxis: 0,
       },
       {
         type: 'line',
         name: 'BASKET',
         data: [...basketdataByTimestamp.keys()].map(timestamp => [timestamp, basketdataByTimestamp.get(timestamp)]),
-        yAxis: 1,
       },
     );
-    
-    const compdata = [];
-    const basketdata = [];
-  
-    for (const row of compRow) {
-      compdata.push([row.timestamp, row.value]);
-    }
-
-    for (const row of basketRow) {
-      basketdata.push([row.timestamp, row.value]);
-    }
-
-    series.push({
-      type: 'line',
-      name: symbol,
-      data: compdata,
-      dashStyle: 'Dash',
-      yAxis: 0
-    });
-
-    series.push({
-      type: 'line',
-      name: symbol,
-      data: basketdata,
-      dashStyle: 'Dash',
-      yAxis: 1
-    });
 
     options = {
       yAxis: [{
         opposite: false,
         allowDecimals: true,
-      },
-    {opposite: true, allowDecimals: true }]
+      }]
     };
   }
   else if (symbol == 'ORCHIDS'){
