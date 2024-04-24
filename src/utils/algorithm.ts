@@ -99,8 +99,8 @@ function getFVLogs(logLines: string[]): FVLogRow[] {
       const fv = Number(line.substring(line.indexOf(";", index)+1, line.indexOf("\\", line.indexOf(";", index)+1)));
       const timestampLine = logLines[i+1]
       const timestamp = Number(timestampLine.trim().split('"timestamp": ').pop());
-      //console.log(product + " ; " + fv + " ; " + timestamp);
-
+      console.log(product + " ; " + fv + " ; " + timestamp);
+      
       rows.push({
         timestamp: timestamp,
         product: product,

@@ -91,6 +91,12 @@ export function VisualizerPage(): ReactNode {
         <FVChart symbol='COMP_BASKET' />
       </Grid.Col>,
     );
+
+    symbolColumns.push(
+      <Grid.Col key={`MidPrice`} span={{ xs: 12, sm: 6 }}>
+        <FVChart symbol='MIDPRICE' />
+      </Grid.Col>,
+    );
     /*
     symbolColumns.push(
       <Grid.Col key={`BASKET - COMP - FunctionDiff`} span={{ xs: 12, sm: 6 }}>
